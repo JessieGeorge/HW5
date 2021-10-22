@@ -1,0 +1,9 @@
+Group 7 - Jessie George, Stewart McKenzie, Bryan Sosa
+10/21/2021
+
+The object is a plus sign.
+
+keyDownHandler function sets the axis and rotation direction based on the arrow keys pressed.
+If no keys are pressed, the object does not rotate.
+
+
