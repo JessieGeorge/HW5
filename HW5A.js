@@ -39,121 +39,131 @@ var plusSign = function() {
 
     var  fovy = 150.0;  // Field-of-view in Y direction angle (in degrees)
     var  aspect = 1.0;       // Viewport aspect ratio
-    var near = 0.3;
+    var near = 0.8; // 0.8 was good
     var far = 3.0;
     var projectionMatrix, projectionMatrixLoc;
 
     var normalsArray = [];
 
-    /*
-    // local coords // TODO: Use this
-    var vertices = [
-        // top of plus sign
-        vec3(-1.5, 1.5, 1.5),
-        vec3(-1.5, 2, 1.5),
-        vec3(1.5, 2, 1.5),
-        vec3(1.5, 1.5, 1.5),
-        vec3(-1.5, 1.5, -1.5),
-        vec3(-1.5, 2, -1.5),
-        vec3(1.5, 2, -1.5),
-        vec3(1.5, 1.5, -1.5),
+    // local homogenous coordinates // TODO: Use this
+    var localVerts = [
+        vec4(4.5, 7.5, 7.5, 1),
+        vec4(4.5, 9, 7.5, 1),
+        vec4(7.5, 9, 7.5, 1),
+        vec4(7.5, 7.5, 7.5, 1),
+        vec4(4.5, 7.5, 4.5, 1),
+        vec4(4.5, 9, 4.5, 1),
+        vec4(7.5, 9, 4.5, 1),
+        vec4(7.5, 7.5, 4.5, 1),
 
         // left of plus sign
-        vec3(-2, -1.5, 1.5),
-        vec3(-2, 1.5, 1.5),
-        vec3(-1.5, 1.5, 1.5),
-        vec3(-1.5, -1.5, 1.5),
-        vec3(-2, -1.5, -1.5),
-        vec3(-2, 1.5, -1.5),
-        vec3(-1.5, 1.5, -1.5),
-        vec3(-1.5, -1.5, -1.5),
+        vec4(3, 4.5, 7.5, 1),
+        vec4(3, 7.5, 7.5, 1),
+        vec4(4.5, 7.5, 7.5, 1),
+        vec4(4.5, 4.5, 7.5, 1),
+        vec4(3, 4.5, 4.5, 1),
+        vec4(3, 7.5, 4.5, 1),
+        vec4(4.5, 7.5, 4.5, 1),
+        vec4(4.5, 4.5, 4.5, 1),
 
         // middle of plus sign
-        vec3(-1.5, -1.5,  1.5),
-        vec3(-1.5,  1.5,  1.5),
-        vec3(1.5,  1.5,  1.5),
-        vec3(1.5, -1.5,  1.5),
-        vec3(-1.5, -1.5, -1.5),
-        vec3(-1.5,  1.5, -1.5),
-        vec3(1.5,  1.5, -1.5),
-        vec3(1.5, -1.5, -1.5),
+        vec4(4.5, 4.5, 7.5, 1),
+        vec4(4.5, 7.5, 7.5, 1),
+        vec4(7.5, 7.5, 7.5, 1),
+        vec4(7.5, 4.5, 7.5, 1),
+        vec4(4.5, 4.5, 4.5, 1),
+        vec4(4.5, 7.5, 4.5, 1),
+        vec4(7.5, 7.5, 4.5, 1),
+        vec4(7.5, 4.5, 4.5, 1),
 
         // right of plus sign
-        vec3(1.5, -1.5, 1.5),
-        vec3(1.5, 1.5, 1.5),
-        vec3(2, 1.5, 1.5),
-        vec3(2, -1.5, 1.5),
-        vec3(1.5, -1.5, -1.5),
-        vec3(1.5, 1.5, -1.5),
-        vec3(2, 1.5, -1.5),
-        vec3(2, -1.5, -1.5),
+        vec4(7.5, 4.5, 7.5, 1),
+        vec4(7.5, 7.5, 7.5, 1),
+        vec4(9, 7.5, 7.5, 1),
+        vec4(9, 4.5, 7.5, 1),
+        vec4(7.5, 4.5, 4.5, 1),
+        vec4(7.5, 7.5, 4.5, 1),
+        vec4(9, 7.5, 4.5, 1),
+        vec4(9, 4.5, 4.5, 1),
 
         // bottom of plus sign
-        vec3(-1.5, -2, 1.5),
-        vec3(-1.5, -1.5, 1.5),
-        vec3(1.5, -1.5, 1.5),
-        vec3(1.5, -2, 1.5),
-        vec3(-1.5, -2, -1.5),
-        vec3(-1.5, -1.5, -1.5),
-        vec3(1.5, -1.5, -1.5),
-        vec3(1.5, -2, -1.5)
-    ]; */
-
-
-    // TEST WITH CLIP COORDS. REMOVETHIS
-    var vertices = [
-        // top of plus sign
-        vec3(-0.5, 0.5, 0.5),
-        vec3(-0.5, 1, 0.5),
-        vec3(0.5, 1, 0.5),
-        vec3(0.5, 0.5, 0.5),
-        vec3(-0.5, 0.5, -0.5),
-        vec3(-0.5, 1, -0.5),
-        vec3(0.5, 1, -0.5),
-        vec3(0.5, 0.5, -0.5),
-
-        // left of plus sign
-        vec3(-1, -0.5, 0.5),
-        vec3(-1, 0.5, 0.5),
-        vec3(-0.5, 0.5, 0.5),
-        vec3(-0.5, -0.5, 0.5),
-        vec3(-1, -0.5, -0.5),
-        vec3(-1, 0.5, -0.5),
-        vec3(-0.5, 0.5, -0.5),
-        vec3(-0.5, -0.5, -0.5),
-
-        // middle of plus sign
-        vec3(-0.5, -0.5, 0.5),
-        vec3(-0.5, 0.5, 0.5),
-        vec3(0.5, 0.5, 0.5),
-        vec3(0.5, -0.5, 0.5),
-        vec3(-0.5, -0.5, -0.5),
-        vec3(-0.5, 0.5, -0.5),
-        vec3(0.5, 0.5, -0.5),
-        vec3(0.5, -0.5, -0.5),
-
-        // right of plus sign
-        vec3(0.5, -0.5, 0.5),
-        vec3(0.5, 0.5, 0.5),
-        vec3(1, 0.5, 0.5),
-        vec3(1, -0.5, 0.5),
-        vec3(0.5, -0.5, -0.5),
-        vec3(0.5, 0.5, -0.5),
-        vec3(1, 0.5, -0.5),
-        vec3(1, -0.5, -0.5),
-
-        // bottom of plus sign
-        vec3(-0.5, -1, 0.5),
-        vec3(-0.5, -0.5, 0.5),
-        vec3(0.5, -0.5, 0.5),
-        vec3(0.5, -1, 0.5),
-        vec3(-0.5, -1, -0.5),
-        vec3(-0.5, -0.5, -0.5),
-        vec3(0.5, -0.5, -0.5),
-        vec3(0.5, -1, -0.5)
+        vec4(4.5, 3, 7.5, 1),
+        vec4(4.5, 4.5, 7.5, 1),
+        vec4(7.5, 4.5, 7.5, 1),
+        vec4(7.5, 3, 7.5, 1),
+        vec4(4.5, 3, 4.5, 1),
+        vec4(4.5, 4.5, 4.5, 1),
+        vec4(7.5, 4.5, 4.5, 1),
+        vec4(7.5, 3, 4.5, 1)
     ];
 
-    /* REMOVETHIS?
+    var scaleMatrix = mat4(1/3, 0, 0, 0,
+                            0, 1/3, 0, 0,
+                            0, 0, 1/3, 0,
+                            0, 0, 0, 1);
+
+    var translateMatrix = mat4(1, 0, 0, -2,
+                                0, 1, 0, -2,
+                                0, 0, 1, -2,
+                                0, 0, 0, 1);
+
+    // to store result from converting to default view volume
+    var vertices = [];
+
+    // TEST WITH CLIP COORDS. REMOVETHIS
+    var testClip = [
+        // top of plus sign
+        vec4(-0.5, 0.5, 0.5, 1),
+        vec4(-0.5, 1, 0.5, 1),
+        vec4(0.5, 1, 0.5, 1),
+        vec4(0.5, 0.5, 0.5, 1),
+        vec4(-0.5, 0.5, -0.5, 1),
+        vec4(-0.5, 1, -0.5, 1),
+        vec4(0.5, 1, -0.5, 1),
+        vec4(0.5, 0.5, -0.5, 1),
+
+        // left of plus sign
+        vec4(-1, -0.5, 0.5, 1),
+        vec4(-1, 0.5, 0.5, 1),
+        vec4(-0.5, 0.5, 0.5, 1),
+        vec4(-0.5, -0.5, 0.5, 1),
+        vec4(-1, -0.5, -0.5, 1),
+        vec4(-1, 0.5, -0.5, 1),
+        vec4(-0.5, 0.5, -0.5, 1),
+        vec4(-0.5, -0.5, -0.5, 1),
+
+        // middle of plus sign
+        vec4(-0.5, -0.5, 0.5, 1),
+        vec4(-0.5, 0.5, 0.5, 1),
+        vec4(0.5, 0.5, 0.5, 1),
+        vec4(0.5, -0.5, 0.5, 1),
+        vec4(-0.5, -0.5, -0.5, 1),
+        vec4(-0.5, 0.5, -0.5, 1),
+        vec4(0.5, 0.5, -0.5, 1),
+        vec4(0.5, -0.5, -0.5, 1),
+
+        // right of plus sign
+        vec4(0.5, -0.5, 0.5, 1),
+        vec4(0.5, 0.5, 0.5, 1),
+        vec4(1, 0.5, 0.5, 1),
+        vec4(1, -0.5, 0.5, 1),
+        vec4(0.5, -0.5, -0.5, 1),
+        vec4(0.5, 0.5, -0.5, 1),
+        vec4(1, 0.5, -0.5, 1),
+        vec4(1, -0.5, -0.5, 1),
+
+        // bottom of plus sign
+        vec4(-0.5, -1, 0.5, 1),
+        vec4(-0.5, -0.5, 0.5, 1),
+        vec4(0.5, -0.5, 0.5, 1),
+        vec4(0.5, -1, 0.5, 1),
+        vec4(-0.5, -1, -0.5, 1),
+        vec4(-0.5, -0.5, -0.5, 1),
+        vec4(0.5, -0.5, -0.5, 1),
+        vec4(0.5, -1, -0.5, 1)
+    ];
+
+    /* REMOVETHIS? */
     var vertexColors = [
         vec4(0.0, 0.0, 0.0, 1.0),  // black
         vec4(1.0, 0.0, 0.0, 1.0),  // red
@@ -199,7 +209,7 @@ var plusSign = function() {
         vec4(1.0, 0.0, 1.0, 1.0),  // magenta
         vec4(1.0, 1.0, 1.0, 1.0),  // white
         vec4(0.0, 1.0, 1.0, 1.0)   // cyan
-    ]; */
+    ];
 
     // indices of 12 triangles per cube inside the plus sign
     var indices = [
@@ -270,14 +280,14 @@ var plusSign = function() {
     ];
 
     var lightPosition = vec4(1.0, 1.0, 1.0, 0.0);
-    var lightAmbient = vec4(0.2, 0.2, 0.2, 1.0);
+    var lightAmbient = vec4(0.8, 0.8, 0.0, 1.0);
     var lightDiffuse = vec4(1.0, 1.0, 1.0, 1.0);
     var lightSpecular = vec4(1.0, 1.0, 1.0, 1.0);
 
-    var materialAmbient = vec4(1.0, 0.0, 1.0, 1.0);
+    var materialAmbient = vec4(1.0, 0.0, 0.0, 1.0);
     var materialDiffuse = vec4(1.0, 0.8, 0.0, 1.0);
     var materialSpecular = vec4(1.0, 0.8, 0.0, 1.0);
-    var materialShininess = 100.0;
+    var materialShininess = 80.0;
 
     // var ctm; // REMOVETHIS?
     // var ambientColor, diffuseColor, specularColor; // REMOVETHIS?
@@ -365,7 +375,7 @@ var plusSign = function() {
         if (!gl) alert("WebGL 2.0 isn't available");
 
         gl.viewport(0, 0, canvas.width, canvas.height);
-        aspect =  canvas.width/canvas.height;
+        //aspect =  canvas.width/canvas.height;
 
         gl.clearColor(0.0, 0.0, 0.0, 1.0);
 
@@ -374,6 +384,38 @@ var plusSign = function() {
         //  Load shaders and initialize attribute buffers
         program = initShaders(gl, "vertex-shader", "fragment-shader");
         gl.useProgram(program);
+
+        /*
+        // REMOVETHIS
+        var newVertObj = mult(translateMatrix, mult(scaleMatrix, localVerts[1]));
+        alert(newVertObj);
+        alert(typeof newVertObj);
+        var newVert = vec4(newVertObj);
+        alert(newVert);
+        alert(typeof newVert);
+        */
+
+        // convert local coords to eye coords
+        for (let i = 0; i < localVerts.length; i++) {
+            var newVert = mult(translateMatrix, mult(scaleMatrix, localVerts[i]));
+            //alert(i + " and " + newVert);
+            vertices.push(newVert);
+        }
+
+        /*
+        // REMOVETHIS
+        alert("V type = " + (typeof vertices) + " and C type = " + (typeof testClip));
+        alert("V len = " + (vertices.length) + " and C len = " + (testClip.length));
+        alert("V[1] type = " + (typeof vertices[1]) + " and C[1] type = " + (typeof testClip[1]));
+        alert("V[1] type = " + (vertices[1]) + " and C[1] type = " + (testClip[1]));
+
+
+        if (vertices == testClip) {
+            alert("Change to clip worked!");
+        } else {
+            alert("Change to clip FAILED.");
+        }
+         */
 
         facesToNormals();
         var nBuffer = gl.createBuffer();
@@ -388,7 +430,7 @@ var plusSign = function() {
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, iBuffer);
         gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint8Array(indices), gl.STATIC_DRAW);
 
-        /* REMOVETHIS?
+        /* REMOVETHIS?*/
         // color array attribute buffer
         var cBuffer = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, cBuffer);
@@ -397,7 +439,7 @@ var plusSign = function() {
         var colorLoc = gl.getAttribLocation(program, "aColor");
         gl.vertexAttribPointer(colorLoc, 4, gl.FLOAT, false, 0, 0);
         gl.enableVertexAttribArray(colorLoc);
-         */
+
 
         // vertex array attribute buffer
         var vBuffer = gl.createBuffer();
@@ -405,7 +447,7 @@ var plusSign = function() {
         gl.bufferData(gl.ARRAY_BUFFER, flatten(vertices), gl.STATIC_DRAW);
 
         var positionLoc = gl.getAttribLocation(program, "aPosition");
-        gl.vertexAttribPointer(positionLoc, 3, gl.FLOAT, false, 0, 0);
+        gl.vertexAttribPointer(positionLoc, 4, gl.FLOAT, false, 0, 0);
         gl.enableVertexAttribArray(positionLoc);
 
         thetaLoc = gl.getUniformLocation(program, "uTheta");
@@ -494,12 +536,12 @@ var plusSign = function() {
             case 37:
                 // LEFT ARROW
                 axis = yAxis;
-                rotDirection = -1;
+                rotDirection = 1;
                 break;
             case 39:
                 // RIGHT ARROW
                 axis = yAxis;
-                rotDirection = 1;
+                rotDirection = -1;
                 break;
             default:
         }
