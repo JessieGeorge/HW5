@@ -5,11 +5,11 @@
 #version 300 es
 
 in  vec4 aPosition;
-// in  vec4 aColor; // REMOVETHIS?
+in  vec4 aColor; // REMOVETHIS?
 in vec3 aNormal;
 
 out vec3 N, L, E;
-// out vec4 vColor; // RMEOVETHIS?
+out vec4 vColor; // RMEOVETHIS?
 
 uniform vec3 uTheta;
 uniform mat4 uModelViewMatrix;
@@ -42,7 +42,7 @@ void main()
 		    0.0,  0.0, 1.0, 0.0,
 		    0.0,  0.0, 0.0, 1.0 );
 
-    // vColor = aColor; // REMOVETHIS?
+    vColor = aColor; // REMOVETHIS?
 
     vec3 pos = -(uModelViewMatrix * aPosition).xyz;
 
@@ -62,7 +62,7 @@ void main()
     //gl_Position = rz * ry * rx * aPosition;
     //gl_Position.z = -gl_Position.z;
 
-    //gl_Position = uProjectionMatrix * uModelViewMatrix * rz * ry * rx * aPosition;
+    gl_Position = uProjectionMatrix * uModelViewMatrix * rz * ry * rx * aPosition;
     //gl_Position = uModelViewMatrix * rz * ry * rx * aPosition;
     gl_Position.z = -gl_Position.z;
 }
@@ -73,7 +73,7 @@ void main()
 
 precision mediump float;
 
-// in vec4 vColor; // REMOVETHIS?
+in vec4 vColor; // REMOVETHIS?
 
 in vec3 N, L, E;
 
@@ -101,7 +101,7 @@ void main()
     fColor.a = 1.0;
 
     // REMOVETHIS?
-    // fColor = vColor;
+    //fColor = vColor;
 }
 </script>
 
