@@ -4,6 +4,15 @@
 <script id="vertex-shader" type="x-shader/x-vertex">
 #version 300 es
 
+/*
+TODO:
+Applying MV matrix twice?
+Negative signs?
+Doing reverse perspective currently?
+Params for perspective?
+No need for explicit conversion of local coords? Handled in lookAt?
+*/
+
 in  vec4 aPosition;
 in  vec4 aColor; // REMOVETHIS?
 in vec3 aNormal;
@@ -64,7 +73,7 @@ void main()
 
     gl_Position = uProjectionMatrix * uModelViewMatrix * rz * ry * rx * aPosition;
     //gl_Position = uModelViewMatrix * rz * ry * rx * aPosition;
-    gl_Position.z = -gl_Position.z;
+    gl_Position.z = gl_Position.z;
 }
 </script>
 
@@ -101,7 +110,7 @@ void main()
     fColor.a = 1.0;
 
     // REMOVETHIS?
-    //fColor = vColor;
+    fColor = vColor;
 }
 </script>
 
