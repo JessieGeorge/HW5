@@ -37,10 +37,10 @@ var plusSign = function() {
     const up = vec3(0.0, 1.0, 0.0);
     var modelViewMatrix, modelViewMatrixLoc;
 
-    var  fovy = 150.0;  // Field-of-view in Y direction angle (in degrees)
+    var  fovy = 120.0;  // Field-of-view in Y direction angle (in degrees)
     var  aspect = 1.0;       // Viewport aspect ratio
-    var near = 0.8; // 0.8 was good
-    var far = 3.0;
+    var near = 0.1; // 0.8 was good
+    var far = 15.0;
     var projectionMatrix, projectionMatrixLoc;
 
     var normalsArray = [];
@@ -108,7 +108,7 @@ var plusSign = function() {
                                 0, 0, 0, 1);
 
     // to store result from converting to default view volume
-    var vertices = [];
+    var vertices = []; //uncomment?
 
     // TEST WITH CLIP COORDS. REMOVETHIS
     var testClip = [
@@ -280,7 +280,7 @@ var plusSign = function() {
     ];
 
     var lightPosition = vec4(1.0, 1.0, 1.0, 0.0);
-    var lightAmbient = vec4(0.8, 0.8, 0.0, 1.0);
+    var lightAmbient = vec4(0.8, 0.0, 0.0, 1.0);
     var lightDiffuse = vec4(1.0, 1.0, 1.0, 1.0);
     var lightSpecular = vec4(1.0, 1.0, 1.0, 1.0);
 
