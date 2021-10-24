@@ -1,7 +1,12 @@
 Group 7 - Jessie George, Stewart McKenzie, Bryan Sosa
 10/21/2021
 
-The object is a plus sign.
+The object is a 3D plus sign.
+
+I. Convert from local coordinates to eye coordinates through scaling and translation.
+II. Modified-Phong lighting model.
+Ambient light is red. Diffuse and Specular components of light are white.
+
 
 keyDownHandler function sets the axis and rotation direction based on the arrow keys pressed.
 If no keys are being pressed, the object does not rotate.
