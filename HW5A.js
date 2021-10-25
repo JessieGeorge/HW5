@@ -37,10 +37,10 @@ var plusSign = function() {
     const up = vec3(0.0, 1.0, 0.0);
     var modelViewMatrix, modelViewMatrixLoc;
 
-    var  fovy = 120.0;  // Field-of-view in Y direction angle (in degrees)
+    var  fovy = 150.0;  // Field-of-view in Y direction angle (in degrees)
     var  aspect = 1.0;       // Viewport aspect ratio
-    var near = 0.1; // 0.8 was good
-    var far = 15.0;
+    var near = 0.8; // 0.8 was good
+    var far = 10.0;
     var projectionMatrix, projectionMatrixLoc;
 
     var normalsArray = [];
@@ -435,11 +435,9 @@ var plusSign = function() {
         var cBuffer = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, cBuffer);
         gl.bufferData(gl.ARRAY_BUFFER, flatten(vertexColors), gl.STATIC_DRAW);
-
         var colorLoc = gl.getAttribLocation(program, "aColor");
         gl.vertexAttribPointer(colorLoc, 4, gl.FLOAT, false, 0, 0);
         gl.enableVertexAttribArray(colorLoc);
-
 
         // vertex array attribute buffer
         var vBuffer = gl.createBuffer();
@@ -499,11 +497,12 @@ var plusSign = function() {
         // console.log(modelViewMatrix); // REMOVETHIS?
 
         /* REMOVETHIS?
-        modelViewMatrix = mat4();
+        //modelViewMatrix = mat4();
+        // this looked uglier than rotating in shaders:
         modelViewMatrix = mult(modelViewMatrix, rotate(theta[xAxis], vec3(1, 0, 0)));
         modelViewMatrix = mult(modelViewMatrix, rotate(theta[yAxis], vec3(0, 1, 0)));
         modelViewMatrix = mult(modelViewMatrix, rotate(theta[zAxis], vec3(0, 0, 1)));
-         */
+        */
 
         gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(modelViewMatrix));
 
