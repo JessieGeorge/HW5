@@ -24,15 +24,15 @@ var plusSign = function() {
     The plus sign object is made up of 5 cubes,
     so 36 * 5 = 180 elements for the plus sign. */
 
-    const eye = vec3(0.0, 0.0, -1.0);
+    const eye = vec3(0.0, 0.0, 1.5);
     const at = vec3(0.0, 0.0, 0.0);
     const up = vec3(0.0, 1.0, 0.0);
     var modelViewMatrix, modelViewMatrixLoc;
 
-    var  fovy = 150.0; // Field-of-view in Y direction angle (in degrees)
-    var  aspect = 1.0; // Viewport aspect ratio
-    var near = 0.8;
-    var far = 3.0;
+    var  fovy = 120.0; // field-of-view in Y direction angle (in degrees)
+    var  aspect = 1.0; // viewport aspect ratio
+    var near = 0.3; // distance from camera, before front of object
+    var far = 3; // distance from camera, after back of object
     var projectionMatrix, projectionMatrixLoc;
 
     var normalsArray = [];
