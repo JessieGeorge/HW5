@@ -7,8 +7,7 @@ var plusSign = function() {
     var axis = 0;
     var xAxis = 0;
     var yAxis = 1;
-    var zAxis = 2;
-    // no rotation on zAxis, so it's not included. REMOVETHIS?
+    // no rotation on zAxis, so it's not included.
 
     var theta = [0, 0, 0];
     var thetaLoc;
@@ -25,28 +24,22 @@ var plusSign = function() {
     The plus sign object is made up of 5 cubes,
     so 36 * 5 = 180 elements for the plus sign. */
 
-    /* REMOVETHIS?
-    var radius = 4.0;
-    var gamma = 0.0;
-    var phi = 0.0;
-    var eye;
-    */
-
     const eye = vec3(0.0, 0.0, -1.0);
     const at = vec3(0.0, 0.0, 0.0);
     const up = vec3(0.0, 1.0, 0.0);
     var modelViewMatrix, modelViewMatrixLoc;
 
-    var  fovy = 150.0;  // Field-of-view in Y direction angle (in degrees)
-    var  aspect = 1.0;       // Viewport aspect ratio
-    var near = 0.8; // 0.8 was good
-    var far = 10.0;
+    var  fovy = 150.0; // Field-of-view in Y direction angle (in degrees)
+    var  aspect = 1.0; // Viewport aspect ratio
+    var near = 0.8;
+    var far = 3.0;
     var projectionMatrix, projectionMatrixLoc;
 
     var normalsArray = [];
 
-    // local homogenous coordinates // TODO: Use this
+    // local homogenous coordinates for vertices
     var localVerts = [
+        // top of plus sign
         vec4(4.5, 7.5, 7.5, 1),
         vec4(4.5, 9, 7.5, 1),
         vec4(7.5, 9, 7.5, 1),
@@ -108,62 +101,9 @@ var plusSign = function() {
                                 0, 0, 0, 1);
 
     // to store result from converting to default view volume
-    var vertices = []; //uncomment?
+    var vertices = [];
 
-    // TEST WITH CLIP COORDS. REMOVETHIS
-    var testClip = [
-        // top of plus sign
-        vec4(-0.5, 0.5, 0.5, 1),
-        vec4(-0.5, 1, 0.5, 1),
-        vec4(0.5, 1, 0.5, 1),
-        vec4(0.5, 0.5, 0.5, 1),
-        vec4(-0.5, 0.5, -0.5, 1),
-        vec4(-0.5, 1, -0.5, 1),
-        vec4(0.5, 1, -0.5, 1),
-        vec4(0.5, 0.5, -0.5, 1),
-
-        // left of plus sign
-        vec4(-1, -0.5, 0.5, 1),
-        vec4(-1, 0.5, 0.5, 1),
-        vec4(-0.5, 0.5, 0.5, 1),
-        vec4(-0.5, -0.5, 0.5, 1),
-        vec4(-1, -0.5, -0.5, 1),
-        vec4(-1, 0.5, -0.5, 1),
-        vec4(-0.5, 0.5, -0.5, 1),
-        vec4(-0.5, -0.5, -0.5, 1),
-
-        // middle of plus sign
-        vec4(-0.5, -0.5, 0.5, 1),
-        vec4(-0.5, 0.5, 0.5, 1),
-        vec4(0.5, 0.5, 0.5, 1),
-        vec4(0.5, -0.5, 0.5, 1),
-        vec4(-0.5, -0.5, -0.5, 1),
-        vec4(-0.5, 0.5, -0.5, 1),
-        vec4(0.5, 0.5, -0.5, 1),
-        vec4(0.5, -0.5, -0.5, 1),
-
-        // right of plus sign
-        vec4(0.5, -0.5, 0.5, 1),
-        vec4(0.5, 0.5, 0.5, 1),
-        vec4(1, 0.5, 0.5, 1),
-        vec4(1, -0.5, 0.5, 1),
-        vec4(0.5, -0.5, -0.5, 1),
-        vec4(0.5, 0.5, -0.5, 1),
-        vec4(1, 0.5, -0.5, 1),
-        vec4(1, -0.5, -0.5, 1),
-
-        // bottom of plus sign
-        vec4(-0.5, -1, 0.5, 1),
-        vec4(-0.5, -0.5, 0.5, 1),
-        vec4(0.5, -0.5, 0.5, 1),
-        vec4(0.5, -1, 0.5, 1),
-        vec4(-0.5, -1, -0.5, 1),
-        vec4(-0.5, -0.5, -0.5, 1),
-        vec4(0.5, -0.5, -0.5, 1),
-        vec4(0.5, -1, -0.5, 1)
-    ];
-
-    /* REMOVETHIS? */
+    /* TESTING: color with light off ... REMOVETHIS? */
     var vertexColors = [
         vec4(0.0, 0.0, 0.0, 1.0),  // black
         vec4(1.0, 0.0, 0.0, 1.0),  // red
@@ -289,10 +229,6 @@ var plusSign = function() {
     var materialSpecular = vec4(1.0, 0.8, 0.0, 1.0);
     var materialShininess = 80.0;
 
-    // var ctm; // REMOVETHIS?
-    // var ambientColor, diffuseColor, specularColor; // REMOVETHIS?
-
-    // var viewerPos; // REMOVETHIS?
     var program;
 
     function initNormals(a, b, c) {
@@ -375,7 +311,7 @@ var plusSign = function() {
         if (!gl) alert("WebGL 2.0 isn't available");
 
         gl.viewport(0, 0, canvas.width, canvas.height);
-        //aspect =  canvas.width/canvas.height;
+        aspect =  canvas.width/canvas.height;
 
         gl.clearColor(0.0, 0.0, 0.0, 1.0);
 
@@ -385,37 +321,11 @@ var plusSign = function() {
         program = initShaders(gl, "vertex-shader", "fragment-shader");
         gl.useProgram(program);
 
-        /*
-        // REMOVETHIS
-        var newVertObj = mult(translateMatrix, mult(scaleMatrix, localVerts[1]));
-        alert(newVertObj);
-        alert(typeof newVertObj);
-        var newVert = vec4(newVertObj);
-        alert(newVert);
-        alert(typeof newVert);
-        */
-
         // convert local coords to eye coords
         for (let i = 0; i < localVerts.length; i++) {
             var newVert = mult(translateMatrix, mult(scaleMatrix, localVerts[i]));
-            //alert(i + " and " + newVert);
             vertices.push(newVert);
         }
-
-        /*
-        // REMOVETHIS
-        alert("V type = " + (typeof vertices) + " and C type = " + (typeof testClip));
-        alert("V len = " + (vertices.length) + " and C len = " + (testClip.length));
-        alert("V[1] type = " + (typeof vertices[1]) + " and C[1] type = " + (typeof testClip[1]));
-        alert("V[1] type = " + (vertices[1]) + " and C[1] type = " + (testClip[1]));
-
-
-        if (vertices == testClip) {
-            alert("Change to clip worked!");
-        } else {
-            alert("Change to clip FAILED.");
-        }
-         */
 
         facesToNormals();
         var nBuffer = gl.createBuffer();
@@ -430,7 +340,7 @@ var plusSign = function() {
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, iBuffer);
         gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint8Array(indices), gl.STATIC_DRAW);
 
-        /* REMOVETHIS?*/
+        /* TESTING: color with light off ... REMOVETHIS? */
         // color array attribute buffer
         var cBuffer = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, cBuffer);
@@ -468,10 +378,7 @@ var plusSign = function() {
         gl.uniform1f(gl.getUniformLocation(program,
             "uShininess"), materialShininess);
 
-        // TODO: Figure out what to do with each code sentence
-        // projectionMatrix = ortho(-1, 1, -1, 1, -100, 100);
         projectionMatrixLoc = gl.getUniformLocation(program, "uProjectionMatrix");
-        // gl.uniformMatrix4fv(projectionMatrixLoc, false, flatten(projectionMatrix));
 
         render();
     }
@@ -485,25 +392,7 @@ var plusSign = function() {
         }
         gl.uniform3fv(thetaLoc, theta);
 
-        /* REMOVETHIS?
-        eye = vec3(radius*Math.sin(gamma)*Math.cos(phi),
-            radius*Math.sin(gamma)*Math.sin(phi),
-            radius*Math.cos(gamma));
-         */
-
-        // Convert from local to eye coords with modelViewMatrix.
-        /* // REMOVETHIS? */
         modelViewMatrix = lookAt(eye, at, up);
-        // console.log(modelViewMatrix); // REMOVETHIS?
-
-        /* REMOVETHIS?
-        //modelViewMatrix = mat4();
-        // this looked uglier than rotating in shaders:
-        modelViewMatrix = mult(modelViewMatrix, rotate(theta[xAxis], vec3(1, 0, 0)));
-        modelViewMatrix = mult(modelViewMatrix, rotate(theta[yAxis], vec3(0, 1, 0)));
-        modelViewMatrix = mult(modelViewMatrix, rotate(theta[zAxis], vec3(0, 0, 1)));
-        */
-
         gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(modelViewMatrix));
 
         // Perspective viewing

@@ -4,21 +4,12 @@
 <script id="vertex-shader" type="x-shader/x-vertex">
 #version 300 es
 
-/*
-TODO:
-Applying MV matrix twice? -- Supposed to happen.
-Negative signs? -- Correct from canvas code.
-Doing reverse perspective currently? -- Nope. Face away is smallest. But front of cube being culled? Check normal.
-Params for perspective? -- Will tweak for best view.
-No need for explicit conversion of local coords? Handled in lookAt? -- I don't see scaling in lookAt, so I'm doing it manually.
-*/
-
 in  vec4 aPosition;
-in  vec4 aColor; // REMOVETHIS?
+in  vec4 aColor; // TESTING: color with light off ... REMOVETHIS?
 in vec3 aNormal;
 
 out vec3 N, L, E;
-out vec4 vColor; // REMOVETHIS?
+out vec4 vColor; // TESTING: color with light off ... REMOVETHIS?
 
 uniform vec3 uTheta;
 uniform mat4 uModelViewMatrix;
@@ -34,7 +25,7 @@ void main()
     vec3 c = cos( angles );
     vec3 s = sin( angles );
 
-    // Remember: these matrices are column-major
+    // Remember these matrices are column-major
     mat4 rx = mat4( 1.0,  0.0,  0.0, 0.0,
 		    0.0,  c.x,  s.x, 0.0,
 		    0.0, -s.x,  c.x, 0.0,
@@ -45,13 +36,12 @@ void main()
 		    s.y, 0.0,  c.y, 0.0,
 		    0.0, 0.0,  0.0, 1.0 );
 
-
     mat4 rz = mat4( c.z, s.z, 0.0, 0.0,
 		    -s.z,  c.z, 0.0, 0.0,
 		    0.0,  0.0, 1.0, 0.0,
 		    0.0,  0.0, 0.0, 1.0 );
 
-    vColor = aColor; // REMOVETHIS?
+    vColor = aColor; // TESTING: color with light off ... REMOVETHIS?
 
     vec3 pos = -(uModelViewMatrix * aPosition).xyz;
 
@@ -65,17 +55,8 @@ void main()
     // Transform vertex normal into eye coordinates
     N = normalize((uModelViewMatrix*NN).xyz);
 
-    //gl_Position = uProjectionMatrix * uModelViewMatrix * aPosition;
-
-    /* This works for rotation. REMOVETHIS?*/
-    //gl_Position = rz * ry * rx * aPosition;
-    //gl_Position.z = -gl_Position.z;
-
-    // REMOVETHIS? testing rotation in js
-    // gl_Position = uModelViewMatrix * aPosition;
-
     gl_Position = uProjectionMatrix * uModelViewMatrix * rz * ry * rx * aPosition;
-    //gl_Position = uModelViewMatrix * rz * ry * rx * aPosition;
+    //gl_Position = uModelViewMatrix * rz * ry * rx * aPosition; // TESTING: w/o projection ... REMOVETHIS?
     gl_Position.z = -gl_Position.z;
 }
 </script>
@@ -85,7 +66,7 @@ void main()
 
 precision mediump float;
 
-in vec4 vColor; // REMOVETHIS?
+in vec4 vColor; // TESTING: color with light off ... REMOVETHIS?
 
 in vec3 N, L, E;
 
@@ -114,8 +95,7 @@ void main()
     fColor = ambient + diffuse + specular;
     fColor.a = 1.0;
 
-    // REMOVETHIS?
-    fColor = vColor;
+    fColor = vColor; // TESTING: color with light off ... REMOVETHIS?
 }
 </script>
 
