@@ -6,11 +6,11 @@
 
 /*
 TODO:
-Applying MV matrix twice?
-Negative signs?
-Doing reverse perspective currently?
-Params for perspective?
-No need for explicit conversion of local coords? Handled in lookAt?
+Applying MV matrix twice? -- Supposed to happen.
+Negative signs? -- Correct from canvas code.
+Doing reverse perspective currently? -- Nope. Face away is smallest. But front of cube being culled? Check normal.
+Params for perspective? -- Will tweak for best view.
+No need for explicit conversion of local coords? Handled in lookAt? -- I don't see scaling in lookAt, so I'm doing it manually.
 */
 
 in  vec4 aPosition;
@@ -18,7 +18,7 @@ in  vec4 aColor; // REMOVETHIS?
 in vec3 aNormal;
 
 out vec3 N, L, E;
-out vec4 vColor; // RMEOVETHIS?
+out vec4 vColor; // REMOVETHIS?
 
 uniform vec3 uTheta;
 uniform mat4 uModelViewMatrix;
@@ -71,9 +71,12 @@ void main()
     //gl_Position = rz * ry * rx * aPosition;
     //gl_Position.z = -gl_Position.z;
 
+    // REMOVETHIS? testing rotation in js
+    // gl_Position = uModelViewMatrix * aPosition;
+
     gl_Position = uProjectionMatrix * uModelViewMatrix * rz * ry * rx * aPosition;
     //gl_Position = uModelViewMatrix * rz * ry * rx * aPosition;
-    gl_Position.z = gl_Position.z;
+    gl_Position.z = -gl_Position.z;
 }
 </script>
 
@@ -104,7 +107,9 @@ void main()
     float Ks = pow( max(dot(N, H), 0.0), uShininess );
     vec4  specular = Ks * uSpecularProduct;
 
-    if( dot(L, N) < 0.0 ) specular = vec4(0.0, 0.0, 0.0, 1.0);
+    if( dot(L, N) < 0.0 ) {
+        specular = vec4(0.0, 0.0, 0.0, 1.0);
+    }
 
     fColor = ambient + diffuse + specular;
     fColor.a = 1.0;
