@@ -56,8 +56,6 @@ void main()
     N = normalize((uModelViewMatrix*NN).xyz);
 
     gl_Position = uProjectionMatrix * uModelViewMatrix * rz * ry * rx * aPosition;
-    //gl_Position = uModelViewMatrix * rz * ry * rx * aPosition; // TESTING: w/o projection ... REMOVETHIS?
-    gl_Position.z = -gl_Position.z;
 }
 </script>
 
